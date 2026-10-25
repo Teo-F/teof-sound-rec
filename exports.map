@@ -1,0 +1,4 @@
+{
+    global: az_mod_v1_entry;
+    local: *;
+};

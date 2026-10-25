@@ -1,0 +1,10 @@
+SDK_INCLUDE ?= /sdk/include
+OUT ?= /build
+CC = gcc
+
+.PHONY: all
+all:
+	mkdir -p $(OUT)
+	$(CC) -std=c11 -O2 -Wall -Wextra -Werror -fPIC -fvisibility=hidden -fno-omit-frame-pointer -fexceptions -fasynchronous-unwind-tables -I$(SDK_INCLUDE) -shared -static-libgcc -Wl,--no-undefined -Wl,--version-script=exports.map -o $(OUT)/teof-sound-rec-experimental.so experimental-mod.c rec-start-aarch64.S
+	readelf -h $(OUT)/teof-sound-rec-experimental.so
+	nm -D --defined-only $(OUT)/teof-sound-rec-experimental.so

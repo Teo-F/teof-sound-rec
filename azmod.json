@@ -1,0 +1,16 @@
+{
+  "azmod": 1,
+  "id": "teof-sound-rec",
+  "name": "Sound / Recording TEST",
+  "version": "0.1.0",
+  "author": "TEO-F",
+  "summary": "Experimental16/24-bit stereo WAV recording preference at44.1kHz for one exact EP147 build.",
+  "description": "Source-preview test candidate, not device-validated. Changes normal recorder-start behavior through an exact-build hook. Only16/24-bit stereo WAV at44.1kHz. No live recorder-format readback or guaranteed precision. Do not use during a set. Runtime finalization, splits and recovery tests remain pending.",
+  "license": "GPL-3.0-only",
+  "source": "https://github.com/Teo-F/teof-sound-rec",
+  "api": 1,
+  "firmware": ["ep147-9e9454e357389ece"],
+  "hooks": true,
+  "min_core": "1.2.5",
+  "category": "audio"
+}

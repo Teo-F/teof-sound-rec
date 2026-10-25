@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <title>Sound REC — mixer sliders and recording indicator</title>
+  <rect width="256" height="256" rx="42" fill="#202326"/>
+  <g stroke="#535b65" stroke-width="12" stroke-linecap="round">
+    <path d="M60 54V190M116 54V190M172 54V190"/>
+  </g>
+  <g fill="#49aaed">
+    <rect x="40" y="93" width="40" height="25" rx="6"/>
+    <rect x="96" y="143" width="40" height="25" rx="6"/>
+    <rect x="152" y="69" width="40" height="25" rx="6"/>
+  </g>
+  <circle cx="194" cy="194" r="35" fill="#202326"/>
+  <circle cx="194" cy="194" r="24" fill="#ff941b"/>
+  <circle cx="194" cy="194" r="10" fill="#202326"/>
+</svg>
