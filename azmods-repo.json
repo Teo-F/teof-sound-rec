@@ -20,6 +20,10 @@
       "hooks": true,
       "source": "https://github.com/Teo-F/teof-sound-rec",
       "updated": "2026-10-25",
+      "screenshots": [
+        "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/sound-recording-settings.png",
+        "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/sound-recording-browse.png"
+      ],
       "category": "audio",
       "license": "GPL-3.0-only",
       "min_core": "1.2.3",
