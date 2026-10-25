@@ -1,64 +1,66 @@
-# Sound / Recording for AZ-MODS
+# Sound / Recording
 
-**Experimental source preview — NOT device-validated, NOT an installation-ready release.**
+![Sound Recording icon](icon.png)
 
-An independently developed Community Mod candidate for the XDJ-AZ running AZ-MODS. Intended scope: **16-bit or24-bit stereo WAV recording at44.1kHz only**. The menu selection is intended for the next normal recording start, not an in-progress file. No other bit depths, codecs, or sample rates are exposed by this source.
+An independent AZ-MODS Community Mod for XDJ-AZ by TEO-F. Choose **16-bit or24-bit stereo PCM WAV at44.1 kHz** from a settings page inside Community Mods. The highlighted button is the preference for the next recording. Default:16-bit.
 
-This repository contains original mod code, an original icon, tests and GPL-3.0 license text. It does not contain vendor firmware, dumps, extracted firmware code, music, user libraries, SSH keys, authentication data or device logs. Not affiliated with AlphaTheta, Pioneer DJ or the AZ-MODS maintainer.
+**Public beta0.3.1.** Two short real-device recordings have been checked; long recordings, automatic splits and storage-error recovery remain unverified. Use a separate test USB and check your files before relying on this for a performance.
 
-## Status and risks
+## Install
 
-- Local Linux AArch64 compilation and assembly unit tests have passed.
-- The recorder hook has **not** been loaded or tested inside a real EP147 process.
-- Recording start/stop/finalization, auto-splits, storage failures, concurrent playback and recovery remain unverified on hardware.
-- The earlier generic host lifecycle model is not used by this hook; no claim of actual idle-state detection is made.
-- A crash in a Community Mod can stop EP147 and audio playback. A successful package validation is not a runtime safety guarantee.
-- Do not install on a performance device, during a set, or with a valuable recording in progress.
--24-bit output does not establish24-bit source fidelity, restore bandwidth or undo upstream clipping.24-bit stereo44100Hz PCM requires264600bytes/s, versus176400bytes/s at16-bit, excluding overhead.
+1. In AZ-MODS, open Community Mods > Repositories and add `Teo-F/teof-sound-rec`.
+2. Refresh Browse, find Sound / Recording (with the blue sliders/orange recording icon), and install it on your test USB.
+3. On the deck, enable Community Mods and this mod. Approve this build if prompted. Reload only after playback and recording have stopped.
+4. Open Community Mods > Installed > Sound / Recording. Its settings appear in the right-hand pane, like Set Clock.
+5. Tap16-bit or24-bit. With the browse knob, turn left/right to focus a button, then press to commit. The highlighted button shows your choice. Start and stop recording normally.
 
-No downloadable binary or repository-index entry is published at this stage. Do not copy this source directory into MODS.
+Changing the preference does not rewrite an existing recording. The page does not read back the currently open writer's format. Inspect a completed WAV to verify it. Version0.3.1 has the same executable as the device-tested0.3.0; only publication metadata/catalog changed. It does not migrate the ambiguous checkbox preference from0.2.x; its new setting defaults to16-bit.
 
-## Exact compatibility boundary
+## Supported build
 
-SDK ABI1; intended minimum core1.2.5. Candidate firmware tag: `ep147-9e9454e357389ece`. Reference on-disk EP147 SHA256: `6577f42532375936c7e3fa830efa35b7daa9cde8e0a265c1fc7143f824321925`.
+- SDK ABI1, embedded core API minimum1.2.3.
+- Exact EP147 tag: `ep147-9e9454e357389ece`.
+- Refuses a different tag or a changed hook-prefix fingerprint.
+- Records at44.1 kHz only. No48/96 kHz,32-bit or other codecs are exposed.
 
-The hook checks firmware tag and16-byte code-region fingerprints before claiming recorder-start address0x230DAB0. Code fingerprints are not cryptographic authentication and do not validate every dependency. An unsupported build or a modified hook prefix must be refused, not bypassed.
+The title bar's displayed AZ-MODS version can differ from the embedded API version. A firmware update may make this mod refuse to load. Do not bypass its guards.
 
-The assembly wrapper only substitutes the incoming bits field for the established normal-start return address0xD611B8, stereo44100Hz, and incoming/requested16/24-bit values. Other callers and formats pass unchanged to the original trampoline. It preserves argument registers x0–x8, SP and incoming LR, avoiding a guessed C++ aggregate-return ABI. The menu has no live recorder-format readback. The caller/ownership and writer/split assumptions still need device validation.
+## What has been verified
 
-## Build locally
+On25October2026, the0.3.0 settings page was used on one XDJ-AZ. Completed files were read without alteration:
 
-Obtain the public [AZ-MODS SDK](https://github.com/Kyle-Hosman/az-mods-sdk) separately. Its header and pinned Linux arm64 Docker build environment are required. Do not substitute the Mac compiler for the final Linux shared library.
+| Mode | Length | Result |
+|---|---:|---|
+|24-bit |17.048s | PCM24, stereo44100Hz, valid RIFF/data sizes and complete frames |
+|16-bit |12.076s | PCM16, stereo44100Hz, valid RIFF/data sizes and complete frames |
 
-Build the SDK Dockerfile as `teof-az-sdk-local:review`, mount this directory read-only at `/mod`, the SDK include directory at `/sdk/include`, and an empty local build directory at `/build`. Inside that container:
+The24-bit recording contained nonzero low bytes in1,168,300 of1,503,648 samples, excluding simple16-bit zero-padding. This is not proof of24 effective bits, bit-perfect source fidelity, or audible improvement. It cannot recover information already lost upstream.
+
+Local page tests cover touch, knob focus/click, Back, invalid choices, unavailable state and stale/small layouts, with clang ASan/UBSan. The unchanged recorder wrapper previously passed192 synthetic adapter cases and exception-unwind tests in Linux AArch64. The0.3 page binary was cross-compiled using GCC15.2, exports only `az_mod_v1_entry`, and requires GLIBC2.17. No claim that a general services-only SDK harness validates this exact-tag hook.
+
+Unverified: long sessions, automatic splits, storage-full/disconnect failures, power-loss recovery, every playback configuration, and reliable recovery from a crashing hook. A mod crash can interrupt audio.24-bit WAV consumes264600bytes/s, approximately50% more audio storage than16-bit.
+
+## Disable / restore
+
+Stop and finalize recording, then stop playback. Disable Sound / Recording under Community Mods > Installed and Reload once. Selecting16-bit alone leaves the hook installed. To remove the mod, use Remove from USB while idle, then reload.
+
+If the UI cannot start, shut down normally where possible. Connect the test USB to a computer, back up MODS, set only `community-mods.teof-sound-rec = off` in MODS/azmods.cfg and create an empty `MODS/community-mods/teof-sound-rec/teof-sound-rec.off`. Return the same USB and use the normal boot flow. Confirm the mod is disabled and verify a fresh baseline recording. This is the loader-supported disable route; a full crash-recovery scenario has not been demonstrated for this release. Do not erase unrelated settings or flash firmware.
+
+## Source and build
+
+Active files: sound-rec.c, sound-page.h, recinfo-hook.S, exports.map, Makefile. The original0.1 source files retained in repository history/root (`experimental-mod.c`, `rec-start-aarch64.S`, `Makefile.experimental` and old tests) are superseded and are not used by this release.
+
+Obtain the public [AZ-MODS SDK](https://github.com/Kyle-Hosman/az-mods-sdk) separately. Use its Linux AArch64 environment, or a Linux-targeting AArch64 cross compiler. `CC` can be supplied on the make command line:
 
 ```sh
-make -f Makefile.experimental
-gcc -std=c11 -O2 -Wall -Wextra -Werror test-hook.c test-hook-shim.S rec-start-aarch64.S -o /build/test-hook
-/build/test-hook
+make all SDK_INCLUDE=/path/to/az-mods-sdk/include OUT=/absolute/build/path CC=aarch64-unknown-linux-gnu-gcc
+# On an AArch64 Linux test host/container:
+make test OUT=/absolute/build/path
+# Native page tests, macOS or Linux:
+cc -std=c11 -O2 -Wall -Wextra -Werror -I/path/to/az-mods-sdk/include test-page.c -o /tmp/test-page
+/tmp/test-page
 ```
 
-Only `az_mod_v1_entry` may be dynamically exported. `Makefile.experimental` applies `exports.map` for this reason. The Docker build is not the SDK packer's image-label attestation.
+Copy the built shared library into the mod directory before packaging with SDK tools/azmod_pack.py. Do not use a macOS-target library on the deck. The distributed binary and source match; package SHA256 and size are in azmods-repo.json.
 
-`test-experimental-init.c` additionally tests tag/code/API refusal and registration order using code-prefix bytes read locally from a user-supplied reference EP147. It must run in an isolated disposable container. The firmware fixture is **not distributed here**; verify its entire SHA256 first. This test does not execute the firmware. Build it with `-D_GNU_SOURCE -I/sdk/include` and pass the reference file path as its only argument.
-
-The SDK's default services-only sanitizer harness expects firmware tag `any`; it cannot by itself validate this exact-tag recorder hook. Its checks must not be reported as passed for this candidate.
-
-## Before any device test
-
-1. Validate the complete package against the SDK and check its binary hash.
-2. Confirm exact active core/build compatibility and absence of competing hooks.
-3. Keep a verified backup of USB MODS configuration and a documented offline disable route.
-4. Finish all playback/recording before reload or power-cycle. Never unplug an actively used USB.
-5. Start with a disposable16-bit test, stop/finalize and inspect the WAV; then test24-bit and switching back to16-bit.
-6. Validate low-bit packing, splits and errors separately. Never label an unverified header-only result as preserved precision.
-
-## Disable/recovery requirements
-
-An installed hook cannot be removed from a running EP147 process merely by changing the16/24 selector. Disable the mod in Community Mods, then restart/reload only after all recordings are finalized and playback stopped. For failed UI startup, power down normally where possible, connect the test USB to the Mac and disable `community-mods.teof-sound-rec` in MODS/azmods.cfg, preserving other keys, before the next boot with that same USB. Verify the loader reports it off and that a subsequent baseline recording returns to16-bit. This route has been reviewed against retained loader source but **not tested with this mod on hardware**; no guaranteed recovery is claimed. Booting without the USB is not treated as a sufficient proof that staged cached code was removed.
-
-Do not reflash firmware, delete unrelated settings, force-kill EP147 during recording, or mark a failed experiment safe merely because the device boots.
-
-## License
-
-GPL-3.0-only. The SDK is an external GPL-3.0 dependency; retain its license obligations when building or redistributing. Original Sound/REC icon assets are supplied under this repository's license.
+Only original mod code/artwork, tests, GPL license and build outputs are distributed. No vendor firmware, manuals, music, device dumps or private configuration are included. Not affiliated with AlphaTheta, Pioneer DJ or the AZ-MODS maintainer. GPL-3.0-only; the original icon is under the same license.

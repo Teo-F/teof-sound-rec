@@ -1,0 +1,29 @@
+{
+  "azmods_repo": 1,
+  "name": "TEO-F Sound Mods",
+  "maintainer": "TEO-F",
+  "homepage": "https://github.com/Teo-F/teof-sound-rec",
+  "mods": [
+    {
+      "id": "teof-sound-rec",
+      "name": "Sound / Recording",
+      "version": "0.3.1",
+      "author": "TEO-F",
+      "summary": "Choose16-bit or24-bit stereo WAV recording at44.1 kHz.",
+      "icon": "https://github.com/Teo-F/teof-sound-rec/releases/download/teof-sound-rec-0.3.1/teof-sound-rec-0.3.1-icon.png",
+      "package": "https://github.com/Teo-F/teof-sound-rec/releases/download/teof-sound-rec-0.3.1/teof-sound-rec-0.3.1.azmod",
+      "sha256": "42250896fd96d630bfb4ef6573fca00434731043fe87414850c10e8c3e776356",
+      "size": 117794,
+      "firmware": [
+        "ep147-9e9454e357389ece"
+      ],
+      "hooks": true,
+      "source": "https://github.com/Teo-F/teof-sound-rec",
+      "updated": "2026-10-25",
+      "category": "audio",
+      "license": "GPL-3.0-only",
+      "min_core": "1.2.3",
+      "description": "Dedicated settings page inside Community Mods. Default16-bit; the selected depth applies to the next recording. Two short16/24-bit recordings verified on one XDJ-AZ. Long recordings, automatic splits and error recovery remain unverified. Exact supported firmware only. No live recording-format readback."
+    }
+  ]
+}
