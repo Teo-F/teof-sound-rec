@@ -2,15 +2,17 @@
   "azmod": 1,
   "id": "teof-sound-rec",
   "name": "Sound / Recording",
-  "version": "0.3.1",
-  "author": "TEO-F",
-  "summary": "Choose16-bit or24-bit stereo WAV recording at44.1 kHz.",
-  "description": "Dedicated settings page inside Community Mods. Default16-bit; the selected depth applies to the next recording. Two short16/24-bit recordings verified on one XDJ-AZ. Long recordings, automatic splits and error recovery remain unverified. Exact supported firmware only. No live recording-format readback.",
+  "version": "0.9.1",
+  "author": "Teo-F",
+  "summary": "16/24-bit WAV, REC headroom, Auto Gain and sample-peak limiter.",
+  "description": "Public beta. Choose 16/24-bit stereo WAV at 44.1 kHz. Headroom 0/-3/-6/-9/-12 dB is live. Auto Gain and the -1 dBFS sample-peak limiter default Off and apply to the next REC; Auto Gain also enables the limiter. File-derived stereo meters have storage delay. Tested on one XDJ-AZ: headroom -6 dB, AGC tone/step/silence, limiter, 16/24-bit, a 34:52 session including a 7:30 track pause, and normal Disable/Reload/restore. Automatic splits, storage-error and power-loss recovery remain unverified. No true-peak guarantee or native48/96 claim. Exact firmware and AZ-MODS 1.2.7+ only.",
   "license": "GPL-3.0-only",
   "source": "https://github.com/Teo-F/teof-sound-rec",
   "api": 1,
-  "firmware": ["ep147-9e9454e357389ece"],
+  "firmware": [
+    "ep147-9e9454e357389ece"
+  ],
   "hooks": true,
-  "min_core": "1.2.3",
+  "min_core": "1.2.7",
   "category": "audio"
 }

@@ -1,21 +1,31 @@
 SDK_INCLUDE ?= /sdk/include
-OUT ?= /build
+OUT ?= build
 CC = gcc
 CXX = g++
-WARN = -Wall -Wextra -Werror
-BASE = -O2 -fno-omit-frame-pointer -fexceptions -fasynchronous-unwind-tables
-SAN ?=
+NM ?= nm
+CROSS ?=
+FLAGS = -O2 -Wall -Wextra -Werror -fPIC -fvisibility=hidden -fno-omit-frame-pointer -fexceptions -fasynchronous-unwind-tables
+FEATURES = -DSR_NATIVE_PROBE -DSR_NATIVE_HEADROOM -DSR_NATIVE_LIFECYCLE -DSR_NATIVE_DYNAMICS
+SOURCES = rec-engine sound-rec-unified rec-monitor rec-observer rec-wav rec-storage rec-telemetry rec-display rec-lastwav rec-file-meter
+LINK_SOURCES = sound-rec-unified rec-monitor rec-observer rec-wav rec-storage rec-telemetry rec-display rec-lastwav rec-engine rec-file-meter
+OBJECTS = $(addprefix $(OUT)/,$(addsuffix .o,$(LINK_SOURCES)))
 
-.PHONY: all test
+.PHONY: all test package clean
 all:
 	mkdir -p $(OUT)
-	$(CC) -std=c11 $(WARN) $(BASE) -fPIC -fvisibility=hidden -I$(SDK_INCLUDE) -shared -static-libgcc -Wl,--no-undefined -Wl,--version-script=exports.map -o $(OUT)/teof-sound-rec.so sound-rec.c recinfo-hook.S
-	nm -D --defined-only $(OUT)/teof-sound-rec.so
+	@for name in $(SOURCES); do \
+	  $(CC) -std=c11 $(FLAGS) $(FEATURES) -I$(SDK_INCLUDE) -c src/$$name.c -o $(OUT)/$$name.o || exit $$?; \
+	done
+	$(CC) -fPIC -c src/recinfo-hook.S -o $(OUT)/recinfo-hook.o
+	$(CXX) -std=c++17 $(FLAGS) $(FEATURES) -I$(SDK_INCLUDE) -c src/rec-native-probe.cpp -o $(OUT)/native-probe.o
+	$(CXX) -shared -static-libgcc -pthread -Wl,--no-undefined -Wl,--version-script=exports.map $(OBJECTS) $(OUT)/recinfo-hook.o $(OUT)/native-probe.o -lm -o $(OUT)/teof-sound-rec.so
+	$(NM) -D --defined-only $(OUT)/teof-sound-rec.so
 
 test:
-	mkdir -p $(OUT)
-	$(CC) -std=c11 $(WARN) $(BASE) $(SAN) -c test-adapter.c -o $(OUT)/test-adapter.o
-	$(CC) $(BASE) -c recinfo-hook.S -o $(OUT)/recinfo-hook.o
-	$(CC) $(BASE) -c test-fixture.S -o $(OUT)/test-fixture.o
-	$(CXX) -std=c++11 $(WARN) $(BASE) $(SAN) test-exceptions.cpp $(OUT)/test-adapter.o $(OUT)/recinfo-hook.o $(OUT)/test-fixture.o -o $(OUT)/test-adapter
-	$(OUT)/test-adapter
+	HOST_CC="$(HOST_CC)" HOST_CXX="$(HOST_CXX)" sh tools/test.sh "$(SDK_INCLUDE)" "$(OUT)/tests"
+
+package: all
+	python3 tools/package.py "$(OUT)"
+
+clean:
+	rm -rf $(OUT)

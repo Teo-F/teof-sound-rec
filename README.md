@@ -1,66 +1,95 @@
 # Sound / Recording
 
-![Sound Recording icon](icon.png)
+**By Teo-F · Public beta 0.9.1**
 
-An independent AZ-MODS Community Mod for XDJ-AZ by TEO-F. Choose **16-bit or24-bit stereo PCM WAV at44.1 kHz** from a settings page inside Community Mods. The highlighted button is the preference for the next recording. Default:16-bit.
+![Sound / Recording icon](icon.png)
 
-**Public beta0.3.1.** Two short real-device recordings have been checked; long recordings, automatic splits and storage-error recovery remain unverified. Use a separate test USB and check your files before relying on this for a performance.
+An independent AZ-MODS Community Mod for XDJ-AZ. Record **16-bit or 24-bit stereo PCM WAV at 44.1 kHz**, select REC headroom, and optionally use Auto Gain and a stereo-linked sample-peak limiter. Settings and file-derived meters appear inside **Community Mods → Installed → Sound / Recording**.
 
-## Install
+0.9.1 distributes the **same executable tested as 0.9.0**; publication metadata, author capitalization, documentation and catalog information have changed. It is a public beta tested on one XDJ-AZ, not a claim that every recording or failure scenario has been validated.
 
-1. In AZ-MODS, open Community Mods > Repositories and add `Teo-F/teof-sound-rec`.
-2. Refresh Browse, find Sound / Recording (with the blue sliders/orange recording icon), and install it on your test USB.
-3. On the deck, enable Community Mods and this mod. Approve this build if prompted. Reload only after playback and recording have stopped.
-4. Open Community Mods > Installed > Sound / Recording. Its settings appear in the right-hand pane, like Set Clock.
-5. Tap16-bit or24-bit. With the browse knob, turn left/right to focus a button, then press to commit. The highlighted button shows your choice. Start and stop recording normally.
+![Active recording and file-derived meters](screenshots/sound-recording-active.png)
 
-Changing the preference does not rewrite an existing recording. The page does not read back the currently open writer's format. Inspect a completed WAV to verify it. Version0.3.1 has the same executable as the device-tested0.3.0; only publication metadata/catalog changed. It does not migrate the ambiguous checkbox preference from0.2.x; its new setting defaults to16-bit.
+Real device captures from the 0.9.0 test build. In this image, **24-bit is selected for the next REC while the active file remains 16-bit**. Changing the preference does not rewrite an open recording.
 
-## Supported build
+![Settings after recording has stopped](screenshots/sound-recording-settings.png)
 
-- SDK ABI1, embedded core API minimum1.2.3.
-- Exact EP147 tag: `ep147-9e9454e357389ece`.
-- Refuses a different tag or a changed hook-prefix fingerprint.
-- Records at44.1 kHz only. No48/96 kHz,32-bit or other codecs are exposed.
+## Install or update
 
-The title bar's displayed AZ-MODS version can differ from the embedded API version. A firmware update may make this mod refuse to load. Do not bypass its guards.
+1. In AZ-MODS Community Mods → Repositories, add `Teo-F/teof-sound-rec`.
+2. Refresh Browse, open **Sound / Recording**, and install/update it on a test USB with a backup.
+3. On the deck, enable Community Mods and Sound / Recording. Approve the build if requested.
+4. Stop and finalize recording and stop playback before using **MOD MENU → Reload**. If approval requires another Reload, complete it.
+5. Confirm **0.9.1 · Running**. Open its Installed page to change settings. Start/stop REC normally on the deck.
 
-## What has been verified
+The catalog requires **AZ-MODS 1.2.7 or newer** and the exact firmware tag **`ep147-9e9454e357389ece`**. Device testing used embedded core 1.2.7. A firmware update can make the mod refuse to load; do not bypass its version/address guards.
 
-On25October2026, the0.3.0 settings page was used on one XDJ-AZ. Completed files were read without alteration:
+## Controls
 
-| Mode | Length | Result |
-|---|---:|---|
-|24-bit |17.048s | PCM24, stereo44100Hz, valid RIFF/data sizes and complete frames |
-|16-bit |12.076s | PCM16, stereo44100Hz, valid RIFF/data sizes and complete frames |
+| Control | Behavior |
+|---|---|
+| Bit depth | 16-bit / 24-bit, applied to the **next recording**. Fresh install defaults to 16-bit. |
+| REC headroom | 0, −3, −6, −9 or −12 dB attenuation. Fresh install defaults to 0 dB. **Live**, sampled at the next recorder-worker call. Select before REC for a clean change; this beta has no gain ramp for manual headroom changes. |
+| Auto Gain + Limiter | Off by default. Applies to the **next REC**. Turning Auto Gain On also selects Limiter On. |
+| Limiter | Off by default. Applies to the **next REC**. Turning it Off also turns Auto Gain Off. |
 
-The24-bit recording contained nonzero low bytes in1,168,300 of1,503,648 samples, excluding simple16-bit zero-padding. This is not proof of24 effective bits, bit-perfect source fidelity, or audible improvement. It cannot recover information already lost upstream.
+Preferences are saved, so upgrades retain existing choices. Active processing is frozen for the take even if the next-REC buttons are changed. Processing state resets on new worker construction and is retired on destruction. Writer changes within that worker retain state in the local adapter; native automatic file splitting has not been tested.
 
-Local page tests cover touch, knob focus/click, Back, invalid choices, unavailable state and stale/small layouts, with clang ASan/UBSan. The unchanged recorder wrapper previously passed192 synthetic adapter cases and exception-unwind tests in Linux AArch64. The0.3 page binary was cross-compiled using GCC15.2, exports only `az_mod_v1_entry`, and requires GLIBC2.17. No claim that a general services-only SDK harness validates this exact-tag hook.
+Auto Gain targets **−18 dBFS RMS**, estimates power over about 400 ms, limits correction to **−18…+6 dB**, and adapts at up to about **3 dB/s down / 0.5 dB/s up**. It is not LUFS normalization. Silence freezes gain increases. Detection is before the selected headroom, so −6 dB headroom also lowers the resulting RMS target by 6 dB.
 
-Unverified: long sessions, automatic splits, storage-full/disconnect failures, power-loss recovery, every playback configuration, and reliable recovery from a crashing hook. A mod crash can interrupt audio.24-bit WAV consumes264600bytes/s, approximately50% more audio storage than16-bit.
+The limiter uses linked L/R gain with a **−1 dBFS sample-peak ceiling**, instantaneous attack and about 100 ms release. It has no lookahead and is **not a true-peak limiter**. Peaks may be reshaped. At 16-bit, final integer quantization can put an encoded peak less than one PCM step above the exact numerical −1 dBFS threshold.
+
+These controls process the recorder's private copied audio planes before native integer packing. They are not MASTER controls or MASTER overload protection, and cannot repair clipping already present upstream. Independent MASTER-output isolation measurements have not been made.
+
+## What the meters show
+
+- Format, written duration and free space are read from the observed recording file and its volume.
+- L/R bars show **sampled written-WAV peaks**, with RMS underlines. They have storage delay and gaps between windows; they are not continuous clipping or true-peak detection.
+- `Active AGC / LIM`, Gain and GR are copied processing telemetry. GR is the last processed-sample gain reduction, not a whole-take maximum.
+- No open file means unavailable. A silent WAV can show `−inf dBFS` and empty bars; this does not by itself indicate a fault.
+- Window full-scale counts apply only to the sampled window, not the whole recording. The small Life diagnostic is a local lifecycle counter, not a general device health score.
+
+## Device validation
+
+Measurements below were made on completed WAV copies on 31 October 2026; no music or vendor firmware is distributed. See [testing details and limitations](docs/TESTING.md).
+
+| Test | Measured result |
+|---|---|
+| Headroom −6 dB, 1 kHz tone | Written-PCM RMS difference **−6.00 dB L/R** versus 0 dB. Other presets have host coefficient tests, not equivalent hardware measurements. |
+| Limiter, 24-bit music | Entire 2:08.75 WAV peaked at **−1.00 dBFS L/R**, with no sample above −1 dBFS. Active GR was observed. |
+| Auto Gain, steady tone | Gradual increase to **−18.00 dBFS RMS L/R**, about 0.5 dB/s. |
+| Low/high/silence sequence | About 0.49 dB/s up and 2.99 dB/s down; high sections settled at −18.00 RMS; approximately +6 dB gain bound and silence hold were supported by the measurements. |
+| Longer recording | **34:52** finalized 24-bit WAV, including a user-confirmed **7:30 pause between tracks**; about 27 minutes outside the long silence intervals. No malfunction reported. Sample peaks stayed at −1 dBFS. |
+| 16-bit | 1:55.44 WAV with consistent RIFF/data lengths and no full-scale samples. Two right-channel samples were less than one PCM step above the exact −1 dBFS threshold. |
+| Normal Disable / Reload / restore | Own module and hooks absent after Reload; stock 16-bit recorder finalized a new WAV; normal Enable/Reload restored the mod. |
+
+**Unverified on hardware:** automatic splits, storage-full/disconnect errors, power-loss or crashing-hook recovery, every headroom preset, long continuous-music and repeated multi-hour operation, true-peak behavior, worst-case timing and every playback configuration. There is no native 48/96 kHz, 32-bit, codec expansion, bit-perfect source or audible-improvement claim. A hook failure can interrupt audio; keep backups and validate your recordings before relying on the beta for a performance.
 
 ## Disable / restore
 
-Stop and finalize recording, then stop playback. Disable Sound / Recording under Community Mods > Installed and Reload once. Selecting16-bit alone leaves the hook installed. To remove the mod, use Remove from USB while idle, then reload.
+Stop/finalize REC and stop playback. Use **Community Mods → Installed → Sound / Recording → Disable**, then **MOD MENU → Reload**. Selecting 16-bit or turning processing Off alone does not remove the hooks. Enable and Reload normally to restore it; respect any approval prompt.
 
-If the UI cannot start, shut down normally where possible. Connect the test USB to a computer, back up MODS, set only `community-mods.teof-sound-rec = off` in MODS/azmods.cfg and create an empty `MODS/community-mods/teof-sound-rec/teof-sound-rec.off`. Return the same USB and use the normal boot flow. Confirm the mod is disabled and verify a fresh baseline recording. This is the loader-supported disable route; a full crash-recovery scenario has not been demonstrated for this release. Do not erase unrelated settings or flash firmware.
+For a UI that cannot start, use the loader-supported USB disable route: shut down normally where possible, connect that USB to a computer and back up MODS. Set only `community-mods.teof-sound-rec = off` in `MODS/azmods.cfg`, create an empty `MODS/community-mods/teof-sound-rec/teof-sound-rec.off`, and return the USB to the normal boot flow. Confirm Disabled and a fresh stock recording. This is a recovery route, not a claim that a crash/power-loss scenario was tested. Do not erase unrelated settings or bypass approval/quarantine.
 
 ## Source and build
 
-Active files: sound-rec.c, sound-page.h, recinfo-hook.S, exports.map, Makefile. The original0.1 source files retained in repository history/root (`experimental-mod.c`, `rec-start-aarch64.S`, `Makefile.experimental` and old tests) are superseded and are not used by this release.
-
-Obtain the public [AZ-MODS SDK](https://github.com/Kyle-Hosman/az-mods-sdk) separately. Use its Linux AArch64 environment, or a Linux-targeting AArch64 cross compiler. `CC` can be supplied on the make command line:
+Active 0.9.x code is under **`src/`**, host tests under **`tests/`**. Older root-level C/assembly/test files are legacy pre-0.9 sources and are not built by the current Makefile. Obtain the public [AZ-MODS SDK](https://github.com/Kyle-Hosman/az-mods-sdk) separately; it is not vendored here.
 
 ```sh
-make all SDK_INCLUDE=/path/to/az-mods-sdk/include OUT=/absolute/build/path CC=aarch64-unknown-linux-gnu-gcc
-# On an AArch64 Linux test host/container:
-make test OUT=/absolute/build/path
-# Native page tests, macOS or Linux:
-cc -std=c11 -O2 -Wall -Wextra -Werror -I/path/to/az-mods-sdk/include test-page.c -o /tmp/test-page
-/tmp/test-page
+make all SDK_INCLUDE=/path/to/az-mods-sdk/include OUT=/absolute/build/path \
+  CC=aarch64-unknown-linux-gnu-gcc CXX=aarch64-unknown-linux-gnu-g++ \
+  NM=aarch64-unknown-linux-gnu-nm
+make test SDK_INCLUDE=/path/to/az-mods-sdk/include OUT=/absolute/host-build \
+  HOST_CC=clang HOST_CXX=clang++
+make package SDK_INCLUDE=/path/to/az-mods-sdk/include OUT=/absolute/build/path \
+  CC=aarch64-unknown-linux-gnu-gcc CXX=aarch64-unknown-linux-gnu-g++ \
+  NM=aarch64-unknown-linux-gnu-nm
 ```
 
-Copy the built shared library into the mod directory before packaging with SDK tools/azmod_pack.py. Do not use a macOS-target library on the deck. The distributed binary and source match; package SHA256 and size are in azmods-repo.json.
+Production build: C11/C++17, Linux AArch64, GCC 15.2 cross toolchain, only `az_mod_v1_entry` exported, GLIBC 2.17 baseline. The public source/Makefile was rebuilt and produced the exact SHA256 of the device-tested executable:
 
-Only original mod code/artwork, tests, GPL license and build outputs are distributed. No vendor firmware, manuals, music, device dumps or private configuration are included. Not affiliated with AlphaTheta, Pioneer DJ or the AZ-MODS maintainer. GPL-3.0-only; the original icon is under the same license.
+`8d68dd5b26c72d660639b9e0a6c0fe793b12bbafa9bcda992701a08bd44e32d1`
+
+[Package checksums](downloads/checksums-0.9.1.json) · [Changelog](CHANGELOG.md).
+
+Only original mod code/artwork, tests, license, build outputs and the owner's supplied UI captures are distributed. No proprietary binaries, manuals, music, device dumps, private keys or configuration are included. Not affiliated with AlphaTheta, Pioneer DJ or the AZ-MODS maintainer. **GPL-3.0-only**.
