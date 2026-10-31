@@ -11,14 +11,14 @@
       "author": "Teo-F",
       "summary": "16/24-bit WAV, REC headroom, Auto Gain and sample-peak limiter.",
       "icon": "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/icon.png",
-      "package": "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/downloads/teof-sound-rec-0.9.1.azmod",
+      "package": "https://github.com/Teo-F/teof-sound-rec/releases/download/v0.9.1/teof-sound-rec-0.9.1.azmod",
       "sha256": "9eb3e261df1837e8bb2b0e0cbe557dca25a7dff6a0131b755b9fba7afe768e35",
       "size": 115884,
       "firmware": [
         "ep147-9e9454e357389ece"
       ],
       "hooks": true,
-      "source": "https://github.com/Teo-F/teof-sound-rec/tree/main/src",
+      "source": "https://github.com/Teo-F/teof-sound-rec",
       "updated": "2026-10-31",
       "category": "audio",
       "license": "GPL-3.0-only",
