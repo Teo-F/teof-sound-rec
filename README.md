@@ -1,12 +1,12 @@
 # Sound / Recording
 
-**By Teo-F · Public beta 0.9.1**
+**By Teo-F · Public beta 0.9.2**
 
 ![Sound / Recording icon](icon.png)
 
 An independent AZ-MODS Community Mod for XDJ-AZ. Record **16-bit or 24-bit stereo PCM WAV at 44.1 kHz**, select REC headroom, and optionally use Auto Gain and a stereo-linked sample-peak limiter. Settings and file-derived meters appear inside **Community Mods → Installed → Sound / Recording**.
 
-0.9.1 distributes the **same executable tested as 0.9.0**; publication metadata, author capitalization, documentation and catalog information have changed. It is a public beta tested on one XDJ-AZ, not a claim that every recording or failure scenario has been validated.
+0.9.2 distributes the **same executable tested as 0.9.0**; publication metadata, author capitalization, documentation and catalog information have changed. It is a public beta tested on one XDJ-AZ, not a claim that every recording or failure scenario has been validated.
 
 ![Active recording and file-derived meters](screenshots/sound-recording-active.png)
 
@@ -20,9 +20,9 @@ Real device captures from the 0.9.0 test build. In this image, **24-bit is selec
 2. Refresh Browse, open **Sound / Recording**, and install/update it on a test USB with a backup.
 3. On the deck, enable Community Mods and Sound / Recording. Approve the build if requested.
 4. Stop and finalize recording and stop playback before using **MOD MENU → Reload**. If approval requires another Reload, complete it.
-5. Confirm **0.9.1 · Running**. Open its Installed page to change settings. Start/stop REC normally on the deck.
+5. Confirm **0.9.2 · Running**. Open its Installed page to change settings. Start/stop REC normally on the deck.
 
-The catalog requires **AZ-MODS 1.2.7 or newer** and the exact firmware tag **`ep147-9e9454e357389ece`**. Device testing used embedded core 1.2.7. A firmware update can make the mod refuse to load; do not bypass its version/address guards.
+The catalog requires **AZ-MODS core 1.2.3 or newer** and the exact firmware tag **`ep147-9e9454e357389ece`**. The application was observed as 1.2.7, but that display is not the loader core-version gate. The tested 0.9.0 package used min_core 1.2.3; 0.9.1 incorrectly raised it to 1.2.7 and was refused on the user’s deck. 0.9.2 restores the tested gate. Runtime API-presence checks and exact firmware guards are unchanged. A firmware update can make the mod refuse to load; do not bypass its version/address guards.
 
 ## Controls
 
@@ -90,6 +90,6 @@ Production build: C11/C++17, Linux AArch64, GCC 15.2 cross toolchain, only `az_m
 
 `8d68dd5b26c72d660639b9e0a6c0fe793b12bbafa9bcda992701a08bd44e32d1`
 
-[Package checksums](downloads/checksums-0.9.1.json) · [Changelog](CHANGELOG.md).
+[Package checksums](downloads/checksums-0.9.2.json) · [Changelog](CHANGELOG.md).
 
 Only original mod code/artwork, tests, license, build outputs and the owner's supplied UI captures are distributed. No proprietary binaries, manuals, music, device dumps, private keys or configuration are included. Not affiliated with AlphaTheta, Pioneer DJ or the AZ-MODS maintainer. **GPL-3.0-only**.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.2 — 2026-10-31 — compatibility correction
+
+- Restore min_core 1.2.3 used by the working 0.9.0 package. The 0.9.1 manifest incorrectly confused the application version with the loader gate and was refused on the tested deck.
+- Same executable SHA256 as tested 0.9.0; no audio or runtime guard changes.
+- Fresh normal installer/Running confirmation remains pending.
+
 ## 0.9.1 — 2026-10-31 — public beta
 
 - Publish the executable tested on the device as 0.9.0, with author **Teo-F**, current documentation and catalog metadata. No audio-code change from that tested binary.

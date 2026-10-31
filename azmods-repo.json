@@ -7,13 +7,13 @@
     {
       "id": "teof-sound-rec",
       "name": "Sound / Recording",
-      "version": "0.9.1",
+      "version": "0.9.2",
       "author": "Teo-F",
       "summary": "16/24-bit WAV, REC headroom, Auto Gain and sample-peak limiter.",
       "icon": "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/icon.png",
-      "package": "https://github.com/Teo-F/teof-sound-rec/releases/download/v0.9.1/teof-sound-rec-0.9.1.azmod",
-      "sha256": "9eb3e261df1837e8bb2b0e0cbe557dca25a7dff6a0131b755b9fba7afe768e35",
-      "size": 115884,
+      "package": "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/downloads/teof-sound-rec-0.9.2.azmod",
+      "sha256": "738feef21542c40d66b7189fd64c718dc83f3895413e4ce0450c17bf8b7fec38",
+      "size": 115887,
       "firmware": [
         "ep147-9e9454e357389ece"
       ],
@@ -22,8 +22,8 @@
       "updated": "2026-10-31",
       "category": "audio",
       "license": "GPL-3.0-only",
-      "min_core": "1.2.7",
-      "description": "Public beta. Choose 16/24-bit stereo WAV at 44.1 kHz. Headroom 0/-3/-6/-9/-12 dB is live. Auto Gain and the -1 dBFS sample-peak limiter default Off and apply to the next REC; Auto Gain also enables the limiter. File-derived stereo meters have storage delay. Tested on one XDJ-AZ: headroom -6 dB, AGC tone/step/silence, limiter, 16/24-bit, a 34:52 session including a 7:30 track pause, and normal Disable/Reload/restore. Automatic splits, storage-error and power-loss recovery remain unverified. No true-peak guarantee or native48/96 claim. Exact firmware and AZ-MODS 1.2.7+ only.",
+      "min_core": "1.2.3",
+      "description": "Public beta. Choose 16/24-bit stereo WAV at 44.1 kHz. Headroom 0/-3/-6/-9/-12 dB is live. Auto Gain and the -1 dBFS sample-peak limiter default Off and apply to the next REC; Auto Gain also enables the limiter. File-derived stereo meters have storage delay. Tested on one XDJ-AZ: headroom -6 dB, AGC tone/step/silence, limiter, 16/24-bit, a 34:52 session including a 7:30 track pause, and normal Disable/Reload/restore. Automatic splits, storage-error and power-loss recovery remain unverified. No true-peak guarantee or native48/96 claim. Exact firmware and AZ-MODS core 1.2.3+ only.",
       "screenshots": [
         "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/screenshots/sound-recording-active.png",
         "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/screenshots/sound-recording-settings.png"

@@ -1,6 +1,6 @@
 # Validation record — 31 October 2026
 
-One XDJ-AZ, exact EP147 `ep147-9e9454e357389ece`, embedded AZ-MODS core 1.2.7. The distributed 0.9.1 executable is byte-identical to the locally tested 0.9.0. Recordings were started/stopped manually. File copies were read by ordinary path after finalization; SHA256 matched device and local copies. Recorded music and proprietary material are not published.
+One XDJ-AZ, exact EP147 `ep147-9e9454e357389ece`, application observed as AZ-MODS 1.2.7 (not proof of the loader core-version gate). The distributed 0.9.2 executable is byte-identical to the locally tested 0.9.0. Recordings were started/stopped manually. File copies were read by ordinary path after finalization; SHA256 matched device and local copies. Recorded music and proprietary material are not published.
 
 ## Host tests
 
@@ -23,3 +23,7 @@ SDK package validation passes. GCC 15.2 AArch64 rebuild from the public source m
 ## Remaining limits
 
 Hardware validation remains open for every preset/mode combination, automatic file splits, full/disconnected storage, power-loss/crashing-hook recovery, prolonged continuous music, repeated multi-hour takes, worst-case CPU/stack timing, independent MASTER-output isolation and true-peak/inter-sample behavior. A consistent header and endpoint checks do not prove no dropped samples without an input reference. No native 48/96 kHz or effective-bit-depth improvement is claimed.
+
+## 0.9.2 compatibility correction
+
+User screenshot confirmed 0.9.1 was refused with Needs AZ-MODS 1.2.7 or newer. The working 0.9.0 manifest required 1.2.3. Version 0.9.2 restores that tested requirement; the executable and runtime API/firmware guards remain unchanged. Fresh normal 0.9.2 installation and Running confirmation are pending.
