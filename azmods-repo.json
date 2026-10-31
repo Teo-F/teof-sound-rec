@@ -10,7 +10,7 @@
       "version": "0.3.2",
       "author": "TEO-F",
       "summary": "Choose16-bit or24-bit stereo WAV recording at44.1 kHz.",
-      "icon": "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/downloads/teof-sound-rec-0.3.2-icon.png",
+      "icon": "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/icon.png",
       "package": "https://raw.githubusercontent.com/Teo-F/teof-sound-rec/main/downloads/teof-sound-rec-0.3.2.azmod",
       "sha256": "3927013c82f1a71088f64f2369b0fe0499d14c001a6a8a08fc7b96e6c096fe63",
       "size": 172453,
